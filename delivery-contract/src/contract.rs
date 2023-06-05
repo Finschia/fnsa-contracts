@@ -7,7 +7,7 @@ use cosmwasm_storage::{bucket, bucket_read, Bucket, ReadonlyBucket};
 
 use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, InstantiateMsg, PlaceResponse, QueryMsg};
-use crate::state::Subcontructor;
+use crate::state::Subcontractor;
 
 const BUCKET_KEY: &[u8] = b"bucket_items";
 const COMPANY_PLACE: &[u8] = b"company_place";
@@ -30,7 +30,7 @@ pub fn instantiate(
     _info: MessageInfo,
     msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
-    let _: Bucket<Subcontructor> = bucket(deps.storage, BUCKET_KEY);
+    let _: Bucket<Subcontractor> = bucket(deps.storage, BUCKET_KEY);
     deps.storage.set(COMPANY_PLACE, &to_vec(&msg.place)?);
     let response = Response::default()
         .add_attribute("place", &msg.place)
@@ -77,7 +77,7 @@ mod callable_points {
 }
 
 fn count_bucket_items(deps: &DepsMut) -> u32 {
-    let bucket_items: ReadonlyBucket<Subcontructor> = bucket_read(deps.storage, BUCKET_KEY);
+    let bucket_items: ReadonlyBucket<Subcontractor> = bucket_read(deps.storage, BUCKET_KEY);
     let mut iter = bucket_items.range(None, None, Order::Ascending);
 
     let mut count = 0;
@@ -92,7 +92,7 @@ fn do_item_forwarding(
     item_id: u32,
     forwarding_addr: Addr,
 ) -> Result<Response, ContractError> {
-    let mut bucket_items: Bucket<Subcontructor> = bucket(deps.storage, BUCKET_KEY);
+    let mut bucket_items: Bucket<Subcontractor> = bucket(deps.storage, BUCKET_KEY);
     let loaded_item = match bucket_items.load(&item_id.to_be_bytes()) {
         Ok(value) => value,
         Err(_err) => return Err(ContractError::NoItemExists { item_id: item_id }),
@@ -109,11 +109,11 @@ fn do_item_forwarding(
         address: forwarding_addr.clone(),
     };
     let forwarding_item_id = contract.deposit_item();
-    let sub_contructor = Subcontructor {
+    let subcontractor_attr = Subcontractor {
         item_id: forwarding_item_id,
         addr: forwarding_addr.clone(),
     };
-    bucket_items.save(&item_id.to_be_bytes(), &sub_contructor)?;
+    bucket_items.save(&item_id.to_be_bytes(), &subcontractor_attr)?;
 
     let response = Response::default()
         .add_attribute("forwarding_item_id", forwarding_item_id.to_string())
@@ -135,19 +135,19 @@ fn do_trace_place(deps: Deps, item_id: u32) -> Result<PlaceResponse, ContractErr
 
 fn handle_deposite_item(deps: DepsMut) -> u32 {
     let item_id = count_bucket_items(&deps) + 1;
-    let mut bucket_items: Bucket<Subcontructor> = bucket(deps.storage, BUCKET_KEY);
-    let subcontructor_attr = Subcontructor {
+    let mut bucket_items: Bucket<Subcontractor> = bucket(deps.storage, BUCKET_KEY);
+    let subcontractor_attr = Subcontractor {
         item_id: 0,
         addr: Addr::unchecked(""),
     };
     bucket_items
-        .save(&item_id.to_be_bytes(), &subcontructor_attr)
+        .save(&item_id.to_be_bytes(), &subcontractor_attr)
         .unwrap();
     item_id
 }
 
 fn handle_trace_place(deps: Deps, item_id: u32) -> Result<String, ContractError> {
-    let bucket_items: ReadonlyBucket<Subcontructor> = bucket_read(deps.storage, BUCKET_KEY);
+    let bucket_items: ReadonlyBucket<Subcontractor> = bucket_read(deps.storage, BUCKET_KEY);
     let loaded_item = match bucket_items.load(&item_id.to_be_bytes()) {
         Ok(value) => value,
         Err(_err) => return Err(ContractError::NoItemExists { item_id: item_id }),
