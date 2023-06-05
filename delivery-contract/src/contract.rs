@@ -161,9 +161,3 @@ fn handle_trace_place(deps: Deps, item_id: u32) -> Result<String, ContractError>
     };
     Ok(contract.trace_place(loaded_item.item_id))
 }
-
-// aaaaaaaa link14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sgf2vn8
-
-// bbbbbb link1suhgf5svhu4usrurvxzlgn54ksxmn8gljarjtxqnapv8kjnp4nrshuxemw
-
-// cccccc link1yyca08xqdgvjz0psg56z67ejh9xms6l436u8y58m82npdqqhmmtq6cjue5
