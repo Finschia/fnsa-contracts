@@ -1,9 +1,10 @@
 use cosmwasm_std::Addr;
 use serde::{Deserialize, Serialize};
 
-/// The `item_id` starts with `1` and `0` is defined as the initial value
+/// The `item_id` represents the subcontractor's item_id.
+/// `0` means that it has not been forwarded to the subcontractor.
 ///
-///  `addr` is address of subcontractor and `""` is defined as the initial value
+/// The `addr` represents address of subcontractor
 #[derive(Serialize, Deserialize)]
 pub struct Subcontractor {
     pub item_id: u32,
