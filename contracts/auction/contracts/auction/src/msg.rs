@@ -1,9 +1,8 @@
+use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{Addr, Timestamp};
-use cosmwasm_schema::{cw_serde};
 
 #[cw_serde]
-pub struct InstantiateMsg {
-}
+pub struct InstantiateMsg {}
 
 #[cw_serde]
 pub enum ExecuteMsg {
@@ -29,9 +28,7 @@ pub struct PlaceBidMsg {
 pub enum QueryMsg {
     GetHighestBid {},
     GetAuctionItem {},
-    GetAuctionHistory {
-        idx: u32,
-    },
+    GetAuctionHistory { idx: u32 },
 }
 
 #[cw_serde]

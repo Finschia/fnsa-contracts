@@ -9,7 +9,8 @@ const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub type Extension = Option<Empty>;
 
-pub type Cw721BaseDynamicLinkContract<'a> = cw721_base::Cw721Contract<'a, Extension, Empty, Empty, Empty>;
+pub type Cw721BaseDynamicLinkContract<'a> =
+    cw721_base::Cw721Contract<'a, Extension, Empty, Empty, Empty>;
 pub type ExecuteMsg = cw721_base::ExecuteMsg<Extension, Empty>;
 pub type QueryMsg = cw721_base::QueryMsg<Empty>;
 
@@ -28,7 +29,8 @@ pub mod entry {
         info: MessageInfo,
         msg: InstantiateMsg,
     ) -> Result<Response, ContractError> {
-        let res = Cw721BaseDynamicLinkContract::default().instantiate(deps.branch(), env, info, msg)?;
+        let res =
+            Cw721BaseDynamicLinkContract::default().instantiate(deps.branch(), env, info, msg)?;
         // Explicitly set contract name and version, otherwise set to cw721-base info
         set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)
             .map_err(ContractError::Std)?;
@@ -51,7 +53,6 @@ pub mod entry {
     }
 }
 
-
 #[callable_points]
 mod callable_points {
     use super::*;
@@ -60,13 +61,15 @@ mod callable_points {
 
     #[callable_point]
     fn transfer_nft(
-        deps: DepsMut, 
-        env: Env, 
-        info: MessageInfo, 
-        recipient: String, 
-        token_id: String
+        deps: DepsMut,
+        env: Env,
+        info: MessageInfo,
+        recipient: String,
+        token_id: String,
     ) -> bool {
-        if let Ok(_) = Cw721BaseDynamicLinkContract::default()._transfer_nft(deps, &env, &info, &recipient, &token_id) {
+        if let Ok(_) = Cw721BaseDynamicLinkContract::default()
+            ._transfer_nft(deps, &env, &info, &recipient, &token_id)
+        {
             return true;
         }
         false

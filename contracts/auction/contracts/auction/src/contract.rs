@@ -1,12 +1,18 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{dynamic_link, from_binary, Addr, BankMsg, Binary, Coin, Contract, CosmosMsg, Deps, DepsMut, Empty, Env, MessageInfo, Response, StdResult, SubMsg, WasmMsg, to_binary, Uint128, Timestamp};
+use cosmwasm_std::{
+    dynamic_link, from_binary, to_binary, Addr, BankMsg, Binary, Coin, Contract, CosmosMsg, Deps,
+    DepsMut, Empty, Env, MessageInfo, Response, StdResult, SubMsg, Timestamp, Uint128, WasmMsg,
+};
 use cw2::set_contract_version;
 use cw721::OwnerOfResponse;
 
 use crate::error::ContractError;
-use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, StartAuctionMsg, PlaceBidMsg, HighestBidResponse, AuctionItemResponse, AuctionHistoryResponse};
-use crate::state::{Bid, Mode, State, History, STATE, BID, HISTORIES, HISTORY_INDEX};
+use crate::msg::{
+    AuctionHistoryResponse, AuctionItemResponse, ExecuteMsg, HighestBidResponse, InstantiateMsg,
+    PlaceBidMsg, QueryMsg, StartAuctionMsg,
+};
+use crate::state::{Bid, History, Mode, State, BID, HISTORIES, HISTORY_INDEX, STATE};
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:auction";
@@ -22,7 +28,7 @@ struct Cw721Contract {
 }
 
 #[dynamic_link(Cw721Contract)]
-trait Cw721: Contract{
+trait Cw721: Contract {
     fn transfer_nft(&self, info: MessageInfo, recipient: String, token_id: String) -> bool;
     fn owner_of(&self, token_id: String, include_expired: bool) -> StdResult<Binary>;
 }
@@ -37,14 +43,17 @@ pub fn instantiate(
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
 
     // reset auction state
-    STATE.save(deps.storage, &State { 
-        mode: Mode::End,
-        end_time: Timestamp::from_nanos(0),
-        seller: Addr::unchecked(""), 
-        cw721_address: Addr::unchecked(""), 
-        token_id: String::from(""), 
-        start_bid: 0,
-    })?;
+    STATE.save(
+        deps.storage,
+        &State {
+            mode: Mode::End,
+            end_time: Timestamp::from_nanos(0),
+            seller: Addr::unchecked(""),
+            cw721_address: Addr::unchecked(""),
+            token_id: String::from(""),
+            start_bid: 0,
+        },
+    )?;
 
     // reset history index
     HISTORY_INDEX.save(deps.storage, &0)?;
@@ -69,8 +78,8 @@ pub fn execute(
 }
 
 pub fn start_auction(
-    deps: DepsMut, 
-    env: Env, 
+    deps: DepsMut,
+    env: Env,
     info: MessageInfo,
     msg: StartAuctionMsg,
 ) -> Result<Response, ContractError> {
@@ -80,37 +89,53 @@ pub fn start_auction(
     }
 
     if msg.expiration_time > MAX_EXPIRATION_SECONDS {
-        return Err(ContractError::ExpirationTimeError { val: msg.expiration_time });
+        return Err(ContractError::ExpirationTimeError {
+            val: msg.expiration_time,
+        });
     }
 
     // set start bid and seller
-    BID.save(deps.storage, &Bid {
-        highest_bid: msg.start_bid.clone(),
-        bidder: info.sender.clone(),
-    })?;
+    BID.save(
+        deps.storage,
+        &Bid {
+            highest_bid: msg.start_bid.clone(),
+            bidder: info.sender.clone(),
+        },
+    )?;
 
     // check owner of nft and transfer it to contract
     let contract = Cw721Contract {
         address: msg.cw721_address.clone(),
     };
-    let owner = from_binary::<OwnerOfResponse>(&contract.owner_of(msg.token_id.clone(), false)?)?.owner;
+    let owner =
+        from_binary::<OwnerOfResponse>(&contract.owner_of(msg.token_id.clone(), false)?)?.owner;
     if owner != info.sender {
         return Err(ContractError::Unauthorized {});
     }
-    let is_success = contract.transfer_nft(info.clone(), env.contract.address.into_string(), msg.token_id.clone());
+    let is_success = contract.transfer_nft(
+        info.clone(),
+        env.contract.address.into_string(),
+        msg.token_id.clone(),
+    );
     if !is_success {
-        return Err(ContractError::TransferNFTError { sender: info.sender, token_id: msg.token_id.clone() });
+        return Err(ContractError::TransferNFTError {
+            sender: info.sender,
+            token_id: msg.token_id.clone(),
+        });
     }
 
     // save auction state
-    STATE.save(deps.storage, &State {
-        mode: Mode::Progress,
-        end_time: env.block.time.plus_seconds(msg.expiration_time),
-        seller: info.sender.clone(),
-        cw721_address: msg.cw721_address.clone(),
-        token_id: msg.token_id.clone(),
-        start_bid: msg.start_bid.clone(),
-    })?;
+    STATE.save(
+        deps.storage,
+        &State {
+            mode: Mode::Progress,
+            end_time: env.block.time.plus_seconds(msg.expiration_time),
+            seller: info.sender.clone(),
+            cw721_address: msg.cw721_address.clone(),
+            token_id: msg.token_id.clone(),
+            start_bid: msg.start_bid.clone(),
+        },
+    )?;
 
     Ok(Response::new()
         .add_attribute("method", "start_auction")
@@ -118,15 +143,14 @@ pub fn start_auction(
         .add_attribute("seller", info.sender)
         .add_attribute("cw721_address", msg.cw721_address)
         .add_attribute("token_id", msg.token_id)
-        .add_attribute("start_bid", msg.start_bid.to_string())
-    )
+        .add_attribute("start_bid", msg.start_bid.to_string()))
 }
 
 pub fn place_bid(
-    deps: DepsMut, 
+    deps: DepsMut,
     env: Env,
-    info: MessageInfo, 
-    msg: PlaceBidMsg
+    info: MessageInfo,
+    msg: PlaceBidMsg,
 ) -> Result<Response, ContractError> {
     let state = STATE.load(deps.storage)?;
     if state.mode != Mode::Progress {
@@ -145,7 +169,10 @@ pub fn place_bid(
     // update bid if it is higher than previous highest bid
     BID.update(deps.storage, |mut b| {
         if b.highest_bid >= msg.bid.clone() {
-            return Err(ContractError::InvalidBidError { bid: msg.bid, highest_bid: b.highest_bid });
+            return Err(ContractError::InvalidBidError {
+                bid: msg.bid,
+                highest_bid: b.highest_bid,
+            });
         }
 
         b.highest_bid = msg.bid;
@@ -156,15 +183,10 @@ pub fn place_bid(
     Ok(Response::new()
         .add_attribute("method", "place_bid")
         .add_attribute("bid", msg.bid.to_string())
-        .add_attribute("bidder", info.sender)
-    )
+        .add_attribute("bidder", info.sender))
 }
 
-pub fn end_auction(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo
-) -> Result<Response, ContractError> {
+pub fn end_auction(deps: DepsMut, env: Env, info: MessageInfo) -> Result<Response, ContractError> {
     let state = STATE.load(deps.storage)?;
     if state.mode != Mode::Progress {
         return Err(ContractError::AuctionNoProgressError {});
@@ -181,14 +203,17 @@ pub fn end_auction(
     }
 
     // reset auction state
-    STATE.save(deps.storage, &State { 
-        mode: Mode::End,
-        end_time: Timestamp::from_nanos(0),
-        seller: Addr::unchecked(""), 
-        cw721_address: Addr::unchecked(""), 
-        token_id: String::from(""), 
-        start_bid: 0,
-    })?;
+    STATE.save(
+        deps.storage,
+        &State {
+            mode: Mode::End,
+            end_time: Timestamp::from_nanos(0),
+            seller: Addr::unchecked(""),
+            cw721_address: Addr::unchecked(""),
+            token_id: String::from(""),
+            start_bid: 0,
+        },
+    )?;
 
     // It the bidder and seller are the same, there are no new bids, so bank send isn't required
     if bid.bidder != state.seller {
@@ -204,39 +229,44 @@ pub fn end_auction(
                 amount: Uint128::from(bid.highest_bid),
             }],
         };
-        let send_submsg: SubMsg<CosmosMsg> = SubMsg::reply_on_success(CosmosMsg::Bank(send_msg.clone()), 1u64);
+        let send_submsg: SubMsg<CosmosMsg> =
+            SubMsg::reply_on_success(CosmosMsg::Bank(send_msg.clone()), 1u64);
         let _res: Response<CosmosMsg> = Response::new().add_submessage(send_submsg);
     }
 
     // transfer it to bidder or seller
     let send_msg = WasmMsg::Execute {
         contract_addr: state.cw721_address.to_string(),
-        msg: to_binary(&cw721_base::ExecuteMsg::<Extension, Empty>::TransferNft { 
-            recipient: info.sender.to_string(), 
+        msg: to_binary(&cw721_base::ExecuteMsg::<Extension, Empty>::TransferNft {
+            recipient: info.sender.to_string(),
             token_id: state.token_id.clone(),
         })?,
         funds: vec![],
     };
-    let send_submsg: SubMsg<CosmosMsg> = SubMsg::reply_on_success(CosmosMsg::Wasm(send_msg.clone()), 2u64);
+    let send_submsg: SubMsg<CosmosMsg> =
+        SubMsg::reply_on_success(CosmosMsg::Wasm(send_msg.clone()), 2u64);
     let _res: Response<CosmosMsg> = Response::new().add_submessage(send_submsg);
 
     // add auction history
     let idx = HISTORY_INDEX.load(deps.storage)?;
-    HISTORIES.save(deps.storage, idx, &History { 
-        end_time: state.end_time, 
-        seller: state.seller, 
-        cw721_address: state.cw721_address, 
-        token_id: state.token_id, 
-        highest_bid: bid.highest_bid, 
-        bidder: bid.bidder.clone(), 
-    })?;
+    HISTORIES.save(
+        deps.storage,
+        idx,
+        &History {
+            end_time: state.end_time,
+            seller: state.seller,
+            cw721_address: state.cw721_address,
+            token_id: state.token_id,
+            highest_bid: bid.highest_bid,
+            bidder: bid.bidder.clone(),
+        },
+    )?;
     HISTORY_INDEX.save(deps.storage, &(idx + 1))?;
 
     Ok(Response::new()
         .add_attribute("method", "end_auction")
         .add_attribute("highest_bid", bid.highest_bid.to_string())
-        .add_attribute("bidder", bid.bidder)
-    )
+        .add_attribute("bidder", bid.bidder))
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -250,7 +280,7 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
 
 fn get_highest_bid(deps: Deps) -> StdResult<HighestBidResponse> {
     let bid = BID.load(deps.storage)?;
-    Ok(HighestBidResponse { 
+    Ok(HighestBidResponse {
         highest_bid: bid.highest_bid,
         bidder: bid.bidder,
     })
@@ -262,7 +292,7 @@ fn get_auction_item(deps: Deps) -> StdResult<AuctionItemResponse> {
         end_time: state.end_time,
         cw721_address: state.cw721_address,
         token_id: state.token_id,
-        start_bid: state.start_bid, 
+        start_bid: state.start_bid,
     })
 }
 

@@ -10,13 +10,12 @@ pub enum ContractError {
     Unauthorized {},
 
     #[error("Unauthorized {val1:?} {val2:?}")]
-    Unauthorized2 {val1: Addr, val2: Addr},
+    Unauthorized2 { val1: Addr, val2: Addr },
 
     #[error("Custom Error val: {val:?}")]
     CustomError { val: String },
     // Add any other custom errors you like here.
     // Look at https://docs.rs/thiserror/1.0.21/thiserror/ for details.
-
     #[error("expiration time is too long: {val:?}")]
     ExpirationTimeError { val: u64 },
 

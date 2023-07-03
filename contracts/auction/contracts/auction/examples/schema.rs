@@ -3,8 +3,11 @@ use std::fs::create_dir_all;
 
 use cosmwasm_schema::{export_schema, remove_schemas, schema_for};
 
-use auction::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, StartAuctionMsg, PlaceBidMsg, HighestBidResponse, AuctionItemResponse, AuctionHistoryResponse};
-use auction::state::{State, Bid, History};
+use auction::msg::{
+    AuctionHistoryResponse, AuctionItemResponse, ExecuteMsg, HighestBidResponse, InstantiateMsg,
+    PlaceBidMsg, QueryMsg, StartAuctionMsg,
+};
+use auction::state::{Bid, History, State};
 
 fn main() {
     let mut out_dir = current_dir().unwrap();
