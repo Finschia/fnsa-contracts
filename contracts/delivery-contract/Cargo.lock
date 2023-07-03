@@ -169,8 +169,8 @@ dependencies = [
 
 [[package]]
 name = "cosmwasm-crypto"
-version = "1.1.9-0.7.0"
-source = "git+https://github.com/finschia/cosmwasm?branch=dynamic_link#2ff53aad81eb2c557c136b83a7af4b8cb28a211d"
+version = "1.1.9+0.7.0-dynamiclink2"
+source = "git+https://github.com/Finschia/cosmwasm?tag=v1.1.9+0.7.0-dynamiclink2#80f98b8e205048c5f33301d487ef709e71742c1b"
 dependencies = [
  "digest 0.10.6",
  "ed25519-zebra",
@@ -182,8 +182,8 @@ dependencies = [
 
 [[package]]
 name = "cosmwasm-derive"
-version = "1.1.9-0.7.0"
-source = "git+https://github.com/finschia/cosmwasm?branch=dynamic_link#2ff53aad81eb2c557c136b83a7af4b8cb28a211d"
+version = "1.1.9+0.7.0-dynamiclink2"
+source = "git+https://github.com/Finschia/cosmwasm?tag=v1.1.9+0.7.0-dynamiclink2#80f98b8e205048c5f33301d487ef709e71742c1b"
 dependencies = [
  "convert_case",
  "proc-macro-error",
@@ -197,8 +197,8 @@ dependencies = [
 
 [[package]]
 name = "cosmwasm-schema"
-version = "1.1.9-0.7.0"
-source = "git+https://github.com/finschia/cosmwasm?branch=dynamic_link#2ff53aad81eb2c557c136b83a7af4b8cb28a211d"
+version = "1.1.9+0.7.0-dynamiclink2"
+source = "git+https://github.com/Finschia/cosmwasm?tag=v1.1.9+0.7.0-dynamiclink2#80f98b8e205048c5f33301d487ef709e71742c1b"
 dependencies = [
  "cosmwasm-schema-derive",
  "schemars",
@@ -209,8 +209,8 @@ dependencies = [
 
 [[package]]
 name = "cosmwasm-schema-derive"
-version = "1.1.9-0.7.0"
-source = "git+https://github.com/finschia/cosmwasm?branch=dynamic_link#2ff53aad81eb2c557c136b83a7af4b8cb28a211d"
+version = "1.1.9+0.7.0-dynamiclink2"
+source = "git+https://github.com/Finschia/cosmwasm?tag=v1.1.9+0.7.0-dynamiclink2#80f98b8e205048c5f33301d487ef709e71742c1b"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -219,8 +219,8 @@ dependencies = [
 
 [[package]]
 name = "cosmwasm-std"
-version = "1.1.9-0.7.0"
-source = "git+https://github.com/finschia/cosmwasm?branch=dynamic_link#2ff53aad81eb2c557c136b83a7af4b8cb28a211d"
+version = "1.1.9+0.7.0-dynamiclink2"
+source = "git+https://github.com/Finschia/cosmwasm?tag=v1.1.9+0.7.0-dynamiclink2#80f98b8e205048c5f33301d487ef709e71742c1b"
 dependencies = [
  "base64",
  "cosmwasm-crypto",
@@ -239,8 +239,8 @@ dependencies = [
 
 [[package]]
 name = "cosmwasm-storage"
-version = "1.1.9-0.7.0"
-source = "git+https://github.com/finschia/cosmwasm?branch=dynamic_link#2ff53aad81eb2c557c136b83a7af4b8cb28a211d"
+version = "1.1.9+0.7.0-dynamiclink2"
+source = "git+https://github.com/Finschia/cosmwasm?tag=v1.1.9+0.7.0-dynamiclink2#80f98b8e205048c5f33301d487ef709e71742c1b"
 dependencies = [
  "cosmwasm-std",
  "serde",
@@ -248,8 +248,8 @@ dependencies = [
 
 [[package]]
 name = "cosmwasm-vm"
-version = "1.1.9-0.7.0"
-source = "git+https://github.com/finschia/cosmwasm?branch=dynamic_link#2ff53aad81eb2c557c136b83a7af4b8cb28a211d"
+version = "1.1.9+0.7.0-dynamiclink2"
+source = "git+https://github.com/Finschia/cosmwasm?tag=v1.1.9+0.7.0-dynamiclink2#80f98b8e205048c5f33301d487ef709e71742c1b"
 dependencies = [
  "bitflags",
  "bytecheck",
