@@ -13,7 +13,7 @@ $docker run --rm -v "$(pwd)":/code \
 
 ```sh
 $docker run --rm -v "$(pwd)":/code \
-  --mount type=volume,source="devcontract_cache_auction_contract",target=/code/auction/target \
+  --mount type=volume,source="devcontract_cache_auction_contract",target=/code/contracts/auction/target \
   --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
   cosmwasm/rust-optimizer:0.12.9 ./contracts/auction
 ```
