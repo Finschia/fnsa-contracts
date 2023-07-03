@@ -1,5 +1,5 @@
 [workspace]
-members = ["packages/*", "contracts/*"]
+members = ["contracts/*"]
 
 [workspace.package]
 version       = "0.1.0"
@@ -14,8 +14,8 @@ cosmwasm-schema = "1.1.5"
 cosmwasm-std    = "1.1.5"
 cw2             = "0.16.0"
 cw20            = "0.16.0"
-cw721           = { version = "0.1.0", path = "./packages/cw721" }
-cw721-base      = { version = "0.1.0", path = "./contracts/cw721-base" }
+cw721           = "0.16.0"
+cw721-base      = "0.16.0"
 cw-storage-plus = "0.16.0"
 cw-utils        = "0.16.0"
 schemars        = "0.8.10"
@@ -24,14 +24,6 @@ thiserror       = "1.0.31"
 
 [patch.crates-io]
 cosmwasm-std = { git = "https://github.com/Finschia/cosmwasm", tag = "v1.1.9+0.7.0-dynamiclink2" }
-
-[profile.release.package.cw721-base]
-codegen-units = 1
-incremental = false
-
-[profile.release.package.cw721-base-dynamiclink]
-codegen-units = 1
-incremental = false
 
 [profile.release]
 rpath = false
