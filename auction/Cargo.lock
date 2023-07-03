@@ -167,7 +167,7 @@ checksum = "6245d59a3e82a7fc217c5828a6692dbc6dfb63a0c8c90495621f7b9d79704a0e"
 [[package]]
 name = "cosmwasm-crypto"
 version = "1.1.9+0.7.0-dynamiclink2"
-source = "git+https://github.com/Finschia/cosmwasm?branch=dynamic_link#80f98b8e205048c5f33301d487ef709e71742c1b"
+source = "git+https://github.com/Finschia/cosmwasm?tag=v1.1.9+0.7.0-dynamiclink2#80f98b8e205048c5f33301d487ef709e71742c1b"
 dependencies = [
  "digest 0.10.7",
  "ed25519-zebra",
@@ -180,7 +180,7 @@ dependencies = [
 [[package]]
 name = "cosmwasm-derive"
 version = "1.1.9+0.7.0-dynamiclink2"
-source = "git+https://github.com/Finschia/cosmwasm?branch=dynamic_link#80f98b8e205048c5f33301d487ef709e71742c1b"
+source = "git+https://github.com/Finschia/cosmwasm?tag=v1.1.9+0.7.0-dynamiclink2#80f98b8e205048c5f33301d487ef709e71742c1b"
 dependencies = [
  "convert_case",
  "proc-macro-error",
@@ -219,7 +219,7 @@ dependencies = [
 [[package]]
 name = "cosmwasm-std"
 version = "1.1.9+0.7.0-dynamiclink2"
-source = "git+https://github.com/Finschia/cosmwasm?branch=dynamic_link#80f98b8e205048c5f33301d487ef709e71742c1b"
+source = "git+https://github.com/Finschia/cosmwasm?tag=v1.1.9+0.7.0-dynamiclink2#80f98b8e205048c5f33301d487ef709e71742c1b"
 dependencies = [
  "base64",
  "cosmwasm-crypto",
@@ -894,7 +894,7 @@ checksum = "d9735b638ccc51c28bf6914d90a2e9725b377144fc612c49a611fddd1b631d68"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.22",
+ "syn 2.0.23",
 ]
 
 [[package]]
@@ -1013,9 +1013,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "2.0.22"
+version = "2.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2efbeae7acf4eabd6bcdcbd11c92f45231ddda7539edc7806bd1a04a03b24616"
+checksum = "59fb7d6d8281a51045d62b8eb3a7d1ce347b76f312af50cd3dc0af39c87c1737"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1045,7 +1045,7 @@ checksum = "f9456a42c5b0d803c8cd86e73dd7cc9edd429499f37a3550d286d5e86720569f"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.22",
+ "syn 2.0.23",
 ]
 
 [[package]]
