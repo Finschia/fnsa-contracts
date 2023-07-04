@@ -1,4 +1,4 @@
-use cosmwasm_std::{callable_points, Binary, Empty, StdResult};
+use cosmwasm_std::{callable_points, Addr, Binary, Empty, StdResult};
 use cw2::set_contract_version;
 pub use cw721::OwnerOfResponse;
 pub use cw721_base::{ContractError, InstantiateMsg, MintMsg, MinterResponse};
@@ -60,16 +60,18 @@ mod callable_points {
     use cosmwasm_std::{Deps, DepsMut, Env, MessageInfo};
 
     #[callable_point]
-    fn transfer_nft(
-        deps: DepsMut,
-        env: Env,
-        info: MessageInfo,
-        recipient: String,
-        token_id: String,
-    ) -> bool {
-        if let Ok(_) = Cw721BaseDynamicLinkContract::default()
-            ._transfer_nft(deps, &env, &info, &recipient, &token_id)
-        {
+    fn transfer_nft(deps: DepsMut, env: Env, recipient: Addr, token_id: String) -> bool {
+        let info = MessageInfo {
+            sender: deps.api.get_caller_addr().unwrap(),
+            funds: vec![],
+        };
+        if let Ok(_) = Cw721BaseDynamicLinkContract::default()._transfer_nft(
+            deps,
+            &env,
+            &info,
+            &recipient.to_string(),
+            &token_id,
+        ) {
             return true;
         }
         false

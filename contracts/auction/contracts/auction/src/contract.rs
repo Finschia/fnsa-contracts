@@ -30,7 +30,7 @@ struct Cw721Contract {
 
 #[dynamic_link(Cw721Contract)]
 trait Cw721: Contract {
-    fn transfer_nft(&self, info: MessageInfo, recipient: String, token_id: String) -> bool;
+    fn transfer_nft(&self, recipient: Addr, token_id: String) -> bool;
     fn owner_of(&self, token_id: String, include_expired: bool) -> StdResult<Binary>;
 }
 
@@ -113,11 +113,7 @@ pub fn start_auction(
     if owner != info.sender {
         return Err(ContractError::Unauthorized {});
     }
-    let is_success = contract.transfer_nft(
-        info.clone(),
-        env.contract.address.into_string(),
-        msg.token_id.clone(),
-    );
+    let is_success = contract.transfer_nft(env.contract.address.clone(), msg.token_id.clone());
     if !is_success {
         return Err(ContractError::TransferNFTError {
             sender: info.sender,
@@ -232,17 +228,11 @@ pub fn end_auction(deps: DepsMut, env: Env, info: MessageInfo) -> Result<Respons
         }],
     };
 
-    // transfer it to bidder or seller
+    // transfer nft to bidder or seller
     let contract = Cw721Contract {
         address: state.cw721_address.clone(),
     };
-    let mut cw721_info = info.clone();
-    cw721_info.sender = env.contract.address.clone();
-    let is_success = contract.transfer_nft(
-        cw721_info,
-        info.sender.to_string(),
-        state.token_id.clone(),
-    );
+    let is_success = contract.transfer_nft(info.sender.clone(), state.token_id.clone());
     if !is_success {
         return Err(ContractError::TransferNFTError {
             sender: env.contract.address,
