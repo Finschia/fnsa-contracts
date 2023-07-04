@@ -1,8 +1,8 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
 use cosmwasm_std::{
-    dynamic_link, from_binary, to_binary, Addr, BankMsg, Binary, Coin, Contract, CosmosMsg, Deps,
-    DepsMut, Empty, Env, MessageInfo, Response, StdResult, SubMsg, Timestamp, Uint128, WasmMsg,
+    dynamic_link, from_binary, to_binary, Addr, BankMsg, Binary, Coin, Contract, Deps, DepsMut,
+    Empty, Env, MessageInfo, Response, StdResult, SubMsg, Timestamp, Uint128,
 };
 use cw2::set_contract_version;
 use cw721::OwnerOfResponse;
@@ -224,7 +224,7 @@ pub fn end_auction(deps: DepsMut, env: Env, info: MessageInfo) -> Result<Respons
         return Err(ContractError::FundsError {});
     }
 
-    let msg1 = BankMsg::Send {
+    let bank_msg = BankMsg::Send {
         to_address: state.seller.to_string(),
         amount: vec![Coin {
             denom: String::from("cony"),
@@ -233,14 +233,22 @@ pub fn end_auction(deps: DepsMut, env: Env, info: MessageInfo) -> Result<Respons
     };
 
     // transfer it to bidder or seller
-    let msg2 = WasmMsg::Execute {
-        contract_addr: state.cw721_address.to_string(),
-        msg: to_binary(&cw721_base::ExecuteMsg::<Extension, Empty>::TransferNft {
-            recipient: info.sender.to_string(),
-            token_id: state.token_id.clone(),
-        })?,
-        funds: vec![],
+    let contract = Cw721Contract {
+        address: state.cw721_address.clone(),
     };
+    let mut cw721_info = info.clone();
+    cw721_info.sender = env.contract.address.clone();
+    let is_success = contract.transfer_nft(
+        cw721_info,
+        info.sender.to_string(),
+        state.token_id.clone(),
+    );
+    if !is_success {
+        return Err(ContractError::TransferNFTError {
+            sender: env.contract.address,
+            token_id: state.token_id.clone(),
+        });
+    }
 
     // add auction history
     let idx = HISTORY_INDEX.load(deps.storage)?;
@@ -259,8 +267,7 @@ pub fn end_auction(deps: DepsMut, env: Env, info: MessageInfo) -> Result<Respons
     HISTORY_INDEX.save(deps.storage, &(idx + 1))?;
 
     Ok(Response::new()
-        .add_submessage(SubMsg::new(msg1))
-        .add_submessage(SubMsg::new(msg2))
+        .add_submessage(SubMsg::new(bank_msg))
         .add_attribute("method", "end_auction")
         .add_attribute("highest_bid", bid.highest_bid.to_string())
         .add_attribute("bidder", bid.bidder))
