@@ -1,4 +1,4 @@
-use cosmwasm_std::{callable_points, Addr, Binary, Empty, StdResult};
+use cosmwasm_std::{callable_points, Binary, Empty, StdResult};
 use cw2::set_contract_version;
 pub use cw721::OwnerOfResponse;
 pub use cw721_base::{ContractError, InstantiateMsg, MintMsg, MinterResponse};
@@ -60,18 +60,14 @@ mod callable_points {
     use cosmwasm_std::{Deps, DepsMut, Env, MessageInfo};
 
     #[callable_point]
-    fn transfer_nft(deps: DepsMut, env: Env, recipient: Addr, token_id: String) -> bool {
+    fn transfer_nft(deps: DepsMut, env: Env, recipient: String, token_id: String) -> bool {
         let info = MessageInfo {
             sender: deps.api.get_caller_addr().unwrap(),
             funds: vec![],
         };
-        if let Ok(_) = Cw721BaseDynamicLinkContract::default()._transfer_nft(
-            deps,
-            &env,
-            &info,
-            &recipient.to_string(),
-            &token_id,
-        ) {
+        if let Ok(_) = Cw721BaseDynamicLinkContract::default()
+            ._transfer_nft(deps, &env, &info, &recipient, &token_id)
+        {
             return true;
         }
         false
@@ -87,6 +83,22 @@ mod callable_points {
         let query_msg = QueryMsg::OwnerOf {
             token_id: token_id.clone(),
             include_expired: Some(include_expired),
+        };
+        Cw721BaseDynamicLinkContract::default().query(deps, env, query_msg)
+    }
+
+    #[callable_point]
+    fn approval(
+        deps: Deps,
+        env: Env,
+        token_id: String,
+        spender: String,
+        include_expired: Option<bool>,
+    ) -> StdResult<Binary> {
+        let query_msg = QueryMsg::Approval {
+            token_id: token_id.clone(),
+            spender: spender,
+            include_expired: include_expired,
         };
         Cw721BaseDynamicLinkContract::default().query(deps, env, query_msg)
     }

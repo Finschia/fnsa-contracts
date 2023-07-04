@@ -5,7 +5,7 @@ use cosmwasm_std::{
     Empty, Env, MessageInfo, Response, StdResult, SubMsg, Timestamp, Uint128,
 };
 use cw2::set_contract_version;
-use cw721::OwnerOfResponse;
+use cw721::{ApprovalResponse, OwnerOfResponse};
 use cw_utils::one_coin;
 
 use crate::error::ContractError;
@@ -30,8 +30,14 @@ struct Cw721Contract {
 
 #[dynamic_link(Cw721Contract)]
 trait Cw721: Contract {
-    fn transfer_nft(&self, recipient: Addr, token_id: String) -> bool;
+    fn transfer_nft(&self, recipient: String, token_id: String) -> bool;
     fn owner_of(&self, token_id: String, include_expired: bool) -> StdResult<Binary>;
+    fn approval(
+        &self,
+        token_id: String,
+        spender: String,
+        include_expired: Option<bool>,
+    ) -> StdResult<Binary>;
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -104,16 +110,31 @@ pub fn start_auction(
         },
     )?;
 
-    // check owner of nft and transfer it to contract
     let contract = Cw721Contract {
         address: msg.cw721_address.clone(),
     };
+
+    // check owner
     let owner =
         from_binary::<OwnerOfResponse>(&contract.owner_of(msg.token_id.clone(), false)?)?.owner;
     if owner != info.sender {
         return Err(ContractError::Unauthorized {});
     }
-    let is_success = contract.transfer_nft(env.contract.address.clone(), msg.token_id.clone());
+
+    // check approval
+    let spender = from_binary::<ApprovalResponse>(&contract.approval(
+        msg.token_id.clone(),
+        env.contract.address.to_string(),
+        None,
+    )?)?
+    .approval
+    .spender;
+    if spender != env.contract.address.clone() {
+        return Err(ContractError::ApprovalError {});
+    }
+
+    // transfer nft to contract
+    let is_success = contract.transfer_nft(env.contract.address.to_string(), msg.token_id.clone());
     if !is_success {
         return Err(ContractError::TransferNFTError {
             sender: info.sender,
@@ -232,7 +253,7 @@ pub fn end_auction(deps: DepsMut, env: Env, info: MessageInfo) -> Result<Respons
     let contract = Cw721Contract {
         address: state.cw721_address.clone(),
     };
-    let is_success = contract.transfer_nft(info.sender.clone(), state.token_id.clone());
+    let is_success = contract.transfer_nft(info.sender.to_string(), state.token_id.clone());
     if !is_success {
         return Err(ContractError::TransferNFTError {
             sender: env.contract.address,

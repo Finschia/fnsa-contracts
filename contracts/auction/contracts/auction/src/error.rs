@@ -9,9 +9,6 @@ pub enum ContractError {
     #[error("Unauthorized")]
     Unauthorized {},
 
-    #[error("Unauthorized {val1:?} {val2:?}")]
-    Unauthorized2 { val1: Addr, val2: Addr },
-
     #[error("Custom Error val: {val:?}")]
     CustomError { val: String },
 
@@ -40,4 +37,7 @@ pub enum ContractError {
 
     #[error("invalid funds")]
     FundsError {},
+
+    #[error("not approved")]
+    ApprovalError {},
 }
