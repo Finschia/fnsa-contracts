@@ -216,9 +216,12 @@ pub fn end_auction(deps: DepsMut, env: Env, info: MessageInfo) -> Result<Respons
         },
     )?;
 
-    let coin = one_coin(&info).unwrap();
-    if coin.denom != "cony" || coin.amount < Uint128::from(bid.highest_bid.clone()) {
-        return Err(ContractError::InsufficientBalanceError {});
+    if let Ok(coin) = one_coin(&info) {
+        if coin.denom != "cony" || coin.amount < Uint128::from(bid.highest_bid.clone()) {
+            return Err(ContractError::InsufficientBalanceError {});
+        }
+    } else {
+        return Err(ContractError::FundsError {});
     }
 
     let msg1 = BankMsg::Send {
