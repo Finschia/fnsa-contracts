@@ -6,6 +6,7 @@ use cosmwasm_std::{
 };
 use cw2::set_contract_version;
 use cw721::OwnerOfResponse;
+use cw_utils::one_coin;
 
 use crate::error::ContractError;
 use crate::msg::{
@@ -215,27 +216,21 @@ pub fn end_auction(deps: DepsMut, env: Env, info: MessageInfo) -> Result<Respons
         },
     )?;
 
-    // It the bidder and seller are the same, there are no new bids, so bank send isn't required
-    if bid.bidder != state.seller {
-        let balance = deps.querier.query_balance(info.sender.clone(), "cony")?;
-        if balance.amount < Uint128::from(bid.highest_bid.clone()) {
-            return Err(ContractError::InsufficientBalanceError {});
-        }
-
-        let send_msg = BankMsg::Send {
-            to_address: state.seller.to_string(),
-            amount: vec![Coin {
-                denom: String::from("cony"),
-                amount: Uint128::from(bid.highest_bid),
-            }],
-        };
-        let send_submsg: SubMsg<CosmosMsg> =
-            SubMsg::reply_on_success(CosmosMsg::Bank(send_msg.clone()), 1u64);
-        let _res: Response<CosmosMsg> = Response::new().add_submessage(send_submsg);
+    let coin = one_coin(&info).unwrap();
+    if coin.denom != "cony" || coin.amount < Uint128::from(bid.highest_bid.clone()) {
+        return Err(ContractError::InsufficientBalanceError {});
     }
 
+    let msg1 = BankMsg::Send {
+        to_address: state.seller.to_string(),
+        amount: vec![Coin {
+            denom: String::from("cony"),
+            amount: Uint128::from(bid.highest_bid),
+        }],
+    };
+
     // transfer it to bidder or seller
-    let send_msg = WasmMsg::Execute {
+    let msg2 = WasmMsg::Execute {
         contract_addr: state.cw721_address.to_string(),
         msg: to_binary(&cw721_base::ExecuteMsg::<Extension, Empty>::TransferNft {
             recipient: info.sender.to_string(),
@@ -243,9 +238,6 @@ pub fn end_auction(deps: DepsMut, env: Env, info: MessageInfo) -> Result<Respons
         })?,
         funds: vec![],
     };
-    let send_submsg: SubMsg<CosmosMsg> =
-        SubMsg::reply_on_success(CosmosMsg::Wasm(send_msg.clone()), 2u64);
-    let _res: Response<CosmosMsg> = Response::new().add_submessage(send_submsg);
 
     // add auction history
     let idx = HISTORY_INDEX.load(deps.storage)?;
@@ -264,6 +256,8 @@ pub fn end_auction(deps: DepsMut, env: Env, info: MessageInfo) -> Result<Respons
     HISTORY_INDEX.save(deps.storage, &(idx + 1))?;
 
     Ok(Response::new()
+        .add_submessage(SubMsg::new(msg1))
+        .add_submessage(SubMsg::new(msg2))
         .add_attribute("method", "end_auction")
         .add_attribute("highest_bid", bid.highest_bid.to_string())
         .add_attribute("bidder", bid.bidder))
