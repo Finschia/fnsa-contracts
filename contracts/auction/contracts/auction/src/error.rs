@@ -38,6 +38,6 @@ pub enum ContractError {
     #[error("invalid funds")]
     FundsError {},
 
-    #[error("not approved")]
+    #[error("NFT is not approved to this contract")]
     ApprovalError {},
 }
