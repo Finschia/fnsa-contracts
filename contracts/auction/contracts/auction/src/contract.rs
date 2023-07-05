@@ -16,7 +16,7 @@ use crate::msg::{
 use crate::state::{Bid, History, Mode, State, BID, HISTORIES, HISTORY_INDEX, STATE};
 
 // version info for migration info
-const CONTRACT_NAME: &str = "crates.io:auction";
+const CONTRACT_NAME: &str = "fnsa-contracts:auction";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 const MAX_EXPIRATION_SECONDS: u64 = 604800; // 1 week(60 * 60 * 24 * 7)
