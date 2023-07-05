@@ -84,6 +84,7 @@ pub fn execute(
     }
 }
 
+// This auction contract can do only one auction at the same time.
 pub fn start_auction(
     deps: DepsMut,
     env: Env,
