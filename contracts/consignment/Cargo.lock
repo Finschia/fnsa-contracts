@@ -156,6 +156,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "591ff76ca0691bd91c1b0b5b987e5cf93b21ec810ad96665c5a569c60846dd93"
 
 [[package]]
+name = "consignment"
+version = "0.1.0"
+dependencies = [
+ "cosmwasm-schema",
+ "cosmwasm-std",
+ "cosmwasm-storage",
+ "cosmwasm-vm",
+ "schemars",
+ "serde",
+ "thiserror",
+ "wasmer",
+]
+
+[[package]]
 name = "const-oid"
 version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -476,20 +490,6 @@ dependencies = [
  "darling_core",
  "quote",
  "syn 2.0.23",
-]
-
-[[package]]
-name = "delivery-contract"
-version = "0.1.0"
-dependencies = [
- "cosmwasm-schema",
- "cosmwasm-std",
- "cosmwasm-storage",
- "cosmwasm-vm",
- "schemars",
- "serde",
- "thiserror",
- "wasmer",
 ]
 
 [[package]]
