@@ -1,7 +1,9 @@
 #  Sample Smart contracts for Finschia
-This repository provides sample contracts that use Finschia's dynamic link feature. Dynamic link is a new feature introduced in Finschia's cosmwasm that allows you to call functions of other contract directly from your contract code. For a detailed explanation of dynamic link, see [Links]().
+This repository provides sample contracts that use Finschia's cosmwasm. We'll be providing many sample contracts in the future, but for now the focus is on how to utilize dynamic link. 
 
-This README explains how to use dynamic link and provides example code. This repository was created to provide a reference for contract developer to understand and utilize dynamic link.
+Dynamic link is a new feature introduced in Finschia's cosmwasm that allows you to call functions of other contract directly from your contract code. For a detailed explanation of dynamic link, see [Links]().
+
+This README explains how to use Finschia's cosmwasm and provides example code. This repository was created to provide a reference for contract developer to understand and utilize Finschia's cosmwasm, especially dynamic link feature.
 
 ## Contracts
 ### delivery
