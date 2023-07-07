@@ -104,6 +104,7 @@ fn handle_consign(
         Err(_err) => return Err(ContractError::NoItemExists { item_id: item_id }),
     };
 
+    // if id is not 0, this item was already consigned to another contract
     if loaded_item.id_in_consignee != 0 {
         return Err(ContractError::AlreadyConsignment {
             item_id: loaded_item.id_in_consignee,
@@ -165,6 +166,8 @@ fn trace_terminal_owner(deps: Deps, _env: Env, item_id: u32) -> Result<Addr, Con
         Ok(value) => value,
         Err(_err) => return Err(ContractError::NoItemExists { item_id: item_id }),
     };
+
+    // if id is 0, this contract has this item now
     if loaded_item.id_in_consignee == 0 {
         let owner = singleton_read(deps.storage, OWNER_KEY);
         return Ok(owner.load()?);
