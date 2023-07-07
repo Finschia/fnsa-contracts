@@ -6,8 +6,8 @@ Dynamic link is a new feature introduced in Finschia's cosmwasm that allows you 
 This README explains how to use Finschia's cosmwasm and provides example code. This repository was created to provide a reference for contract developer to understand and utilize Finschia's cosmwasm, especially dynamic link feature.
 
 ## Contracts
-### consigment
-- [`consigment`](./contracts/consigment) Simple implementation of consigment system model using dynamic link
+### consignment
+- [`consignment`](./contracts/consignment) Simple implementation of consignment system model using dynamic link
 
 ### auction
 - [`auction`](./contracts/auction/contracts/auction) Implementation of NFT auction system using dynamic link
