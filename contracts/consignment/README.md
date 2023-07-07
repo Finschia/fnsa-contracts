@@ -34,4 +34,4 @@ Callable points is called via other consignment contracts for consigning and tra
 - Dynamic link cannot call too deep callstack; default max length is 5.
   So, long consignment chain cannot be traced with a contract call.
 
-These can be solved using traditional query without gas problems.
+These can be solved using traditional query excluding gas problems.
