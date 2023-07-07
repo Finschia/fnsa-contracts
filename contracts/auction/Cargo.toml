@@ -5,22 +5,22 @@ members = ["contracts/*"]
 version       = "0.1.0"
 edition       = "2021"
 license       = "Apache-2.0"
-repository    = "https://github.com/CosmWasm/cw-nfts"
+repository    = "https://github.com/Finschia/fnsa-contracts"
 homepage      = "https://cosmwasm.com"
 documentation = "https://docs.cosmwasm.com"
 
 [workspace.dependencies]
-cosmwasm-schema = "1.1.5"
-cosmwasm-std    = "1.1.5"
-cw2             = "0.16.0"
-cw20            = "0.16.0"
+cosmwasm-schema = "1.1.9"
+cosmwasm-std    = "1.1.9"
+cw2             = "1.1.0"
+cw20            = "1.1.0"
 cw721           = "0.16.0"
 cw721-base      = "0.16.0"
-cw-storage-plus = "0.16.0"
-cw-utils        = "0.16.0"
-schemars        = "0.8.10"
-serde           = { version = "1.0.140", default-features = false, features = ["derive"] }
-thiserror       = "1.0.31"
+cw-storage-plus = "1.1.0"
+cw-utils        = "1.0.1"
+schemars        = "0.8.12"
+serde           = { version = "1.0.167", default-features = false, features = ["derive"] }
+thiserror       = "1.0.43"
 
 [patch.crates-io]
 cosmwasm-std = { git = "https://github.com/Finschia/cosmwasm", tag = "v1.1.9+0.7.0-dynamiclink2" }
