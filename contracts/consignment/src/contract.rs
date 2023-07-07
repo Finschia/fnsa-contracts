@@ -3,14 +3,15 @@ use cosmwasm_std::{
     Env, MessageInfo, Response,
 };
 
-use cosmwasm_storage::{bucket, bucket_read, singleton, Bucket, ReadonlyBucket};
+use cosmwasm_storage::{bucket, bucket_read, singleton, singleton_read, Bucket, ReadonlyBucket};
 
 use crate::error::ContractError;
-use crate::msg::{ConsigneeResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
+use crate::msg::{OwnerResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::Item;
 
 const BUCKET_KEY: &[u8] = b"bucket_items";
-const NEXT_ITEM_ID: &[u8] = b"next_item_it";
+const NEXT_ITEM_ID_KEY: &[u8] = b"next_item_it";
+const OWNER_KEY: &[u8] = b"owner";
 
 #[derive(Contract)]
 struct ConsigneeContract {
@@ -20,42 +21,47 @@ struct ConsigneeContract {
 #[dynamic_link(ConsigneeContract)]
 trait Consignee: Contract {
     fn get_consigned(&self) -> Result<u32, ContractError>;
-    fn trace_terminal_consignee(&self, item_id: u32) -> Result<Addr, ContractError>;
+    fn trace_terminal_owner(&self, item_id: u32) -> Result<Addr, ContractError>;
 }
 
 #[entry_point]
 pub fn instantiate(
     deps: DepsMut,
     _env: Env,
-    _info: MessageInfo,
+    info: MessageInfo,
     _msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
     let _: Bucket<Item> = bucket(deps.storage, BUCKET_KEY);
-    let mut next_id = singleton(deps.storage, NEXT_ITEM_ID);
+    let mut next_id = singleton(deps.storage, NEXT_ITEM_ID_KEY);
     let first_id: u32 = 1;
     next_id.save(&first_id)?;
-    Ok(Response::default())
+    let mut owner = singleton(deps.storage, OWNER_KEY);
+    owner.save(&info.sender)?;
+    let response = Response::default().add_attribute("owner", info.sender.to_string());
+    Ok(response)
 }
 
 #[entry_point]
 pub fn execute(
     deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
     match msg {
-        ExecuteMsg::Consign { item_id, consignee } => handle_consign(deps, item_id, consignee),
-        ExecuteMsg::Mint {} => handle_mint(deps),
+        ExecuteMsg::Consign { item_id, consignee } => {
+            handle_consign(deps, env, info, item_id, consignee)
+        }
+        ExecuteMsg::Mint {} => handle_mint(deps, env, info),
     }
 }
 
 #[entry_point]
 pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> Result<Binary, ContractError> {
     match msg {
-        QueryMsg::TerminalConsignee { item_id } => Ok(to_binary(&query_trace_terminal_consignee(
-            deps, env, item_id,
-        )?)?),
+        QueryMsg::TerminalOwner { item_id } => {
+            Ok(to_binary(&query_trace_terminal_owner(deps, env, item_id)?)?)
+        }
     }
 }
 
@@ -71,12 +77,27 @@ mod callable_points {
 
     // returns the terminal consignee
     #[callable_point]
-    fn trace_terminal_consignee(deps: Deps, env: Env, item_id: u32) -> Result<Addr, ContractError> {
-        super::trace_terminal_consignee(deps, env, item_id)
+    fn trace_terminal_owner(deps: Deps, env: Env, item_id: u32) -> Result<Addr, ContractError> {
+        super::trace_terminal_owner(deps, env, item_id)
     }
 }
 
-fn handle_consign(deps: DepsMut, item_id: u32, consignee: Addr) -> Result<Response, ContractError> {
+fn handle_consign(
+    deps: DepsMut,
+    _env: Env,
+    info: MessageInfo,
+    item_id: u32,
+    consignee: Addr,
+) -> Result<Response, ContractError> {
+    // unauthrized error if sender is not the owner
+    let owner = singleton_read(deps.storage, OWNER_KEY);
+    let owner_addr: Addr = owner.load()?;
+    if owner_addr != info.sender {
+        return Err(ContractError::UnauthorizedSender {
+            sender: info.sender,
+        });
+    }
+
     let mut bucket_items: Bucket<Item> = bucket(deps.storage, BUCKET_KEY);
     let loaded_item = match bucket_items.load(&item_id.to_be_bytes()) {
         Ok(value) => value,
@@ -93,7 +114,9 @@ fn handle_consign(deps: DepsMut, item_id: u32, consignee: Addr) -> Result<Respon
     let contract = ConsigneeContract {
         address: consignee.clone(),
     };
-    let id_in_consignee = contract.get_consigned()?;
+    let id_in_consignee = contract
+        .get_consigned()
+        .map_err(|e| ContractError::Consignee(Box::new(e)))?;
     let subcontractor_attr = Item {
         id_in_consignee,
         consignee: consignee.clone(),
@@ -107,22 +130,22 @@ fn handle_consign(deps: DepsMut, item_id: u32, consignee: Addr) -> Result<Respon
     Ok(response)
 }
 
-fn handle_mint(deps: DepsMut) -> Result<Response, ContractError> {
+fn handle_mint(deps: DepsMut, _env: Env, _info: MessageInfo) -> Result<Response, ContractError> {
     let _ = mint(deps)?;
     Ok(Response::default())
 }
 
-fn query_trace_terminal_consignee(
+fn query_trace_terminal_owner(
     deps: Deps,
     env: Env,
     item_id: u32,
-) -> Result<ConsigneeResponse, ContractError> {
-    let consignee = trace_terminal_consignee(deps, env, item_id)?;
-    Ok(ConsigneeResponse { consignee })
+) -> Result<OwnerResponse, ContractError> {
+    let owner = trace_terminal_owner(deps, env, item_id)?;
+    Ok(OwnerResponse { owner })
 }
 
 fn mint(deps: DepsMut) -> Result<u32, ContractError> {
-    let mut next_id = singleton(deps.storage, NEXT_ITEM_ID);
+    let mut next_id = singleton(deps.storage, NEXT_ITEM_ID_KEY);
     let item_id: u32 = next_id.load()?;
     let next_item_id: u32 = item_id + 1;
     next_id.save(&next_item_id)?;
@@ -136,18 +159,21 @@ fn mint(deps: DepsMut) -> Result<u32, ContractError> {
     Ok(item_id)
 }
 
-fn trace_terminal_consignee(deps: Deps, env: Env, item_id: u32) -> Result<Addr, ContractError> {
+fn trace_terminal_owner(deps: Deps, _env: Env, item_id: u32) -> Result<Addr, ContractError> {
     let bucket_items: ReadonlyBucket<Item> = bucket_read(deps.storage, BUCKET_KEY);
     let loaded_item = match bucket_items.load(&item_id.to_be_bytes()) {
         Ok(value) => value,
         Err(_err) => return Err(ContractError::NoItemExists { item_id: item_id }),
     };
     if loaded_item.id_in_consignee == 0 {
-        return Ok(env.contract.address);
+        let owner = singleton_read(deps.storage, OWNER_KEY);
+        return Ok(owner.load()?);
     }
 
     let consignee = ConsigneeContract {
         address: loaded_item.consignee,
     };
-    consignee.trace_terminal_consignee(loaded_item.id_in_consignee)
+    consignee
+        .trace_terminal_owner(loaded_item.id_in_consignee)
+        .map_err(|e| ContractError::Consignee(Box::new(e)))
 }

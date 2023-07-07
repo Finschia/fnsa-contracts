@@ -10,4 +10,8 @@ pub enum ContractError {
     NoItemExists { item_id: u32 },
     #[error("This item:'{item_id}' has already been consigned to '{consignee}'")]
     AlreadyConsignment { item_id: u32, consignee: Addr },
+    #[error("This operation is not authorized to {sender}")]
+    UnauthorizedSender { sender: Addr },
+    #[error("Error in consignee: {0}")]
+    Consignee(Box<ContractError>),
 }
