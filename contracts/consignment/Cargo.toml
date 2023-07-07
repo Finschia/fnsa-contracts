@@ -28,11 +28,11 @@ overflow-checks = true
 backtraces = ["cosmwasm-std/backtraces"]
 
 [dependencies]
-cosmwasm-std = "1.1.5"
-cosmwasm-storage = "1.1.5"
-schemars = "0.8.1"
-serde = { version = "1.0.125", default-features = false, features = ["derive"] }
-thiserror = { version = "1.0.24" }
+cosmwasm-std = "1.1.9"
+cosmwasm-storage = "1.1.9"
+schemars = "0.8.12"
+serde = { version = "1.0.167", default-features = false, features = ["derive"] }
+thiserror = { version = "1.0.43" }
 
 [dev-dependencies]
 cosmwasm-schema = "1.1.5"
