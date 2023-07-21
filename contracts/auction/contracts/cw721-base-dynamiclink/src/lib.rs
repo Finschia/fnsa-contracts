@@ -53,6 +53,11 @@ pub mod entry {
     }
 }
 
+// These callable points do not cover all cw721 message/query.
+// Although these should cover all of them, they implements only
+// callable points used by auction contract.
+// After we define the starndard interfaces for cw721 for dynamic link,
+// we should remake them according to them.
 #[callable_points]
 mod callable_points {
     use super::*;
