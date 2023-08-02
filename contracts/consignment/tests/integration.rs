@@ -3,18 +3,18 @@ use std::collections::HashMap;
 use wasmer::{FunctionType, Type};
 
 static CONTRACT_CALLER_CALLEE: &[u8] =
-    include_bytes!("../target/wasm32-unknown-unknown/release/delivery_contract.wasm");
+    include_bytes!("../target/wasm32-unknown-unknown/release/consignment.wasm");
 
 fn required_imports() -> Vec<(String, String, FunctionType)> {
-    let module_name = "dynamiclinked_DeliveryContract";
+    let module_name = "dynamiclinked_ConsigneeContract";
     vec![
         (
-            String::from("deposit_item"),
+            String::from("get_consigned"),
             module_name.to_string(),
             ([Type::I32], [Type::I32]).into(),
         ),
         (
-            String::from("trace_place"),
+            String::from("trace_terminal_owner"),
             module_name.to_string(),
             ([Type::I32, Type::I32], [Type::I32]).into(),
         ),
@@ -24,11 +24,11 @@ fn required_imports() -> Vec<(String, String, FunctionType)> {
 fn required_exports() -> Vec<(String, FunctionType)> {
     vec![
         (
-            String::from("deposit_item"),
+            String::from("get_consigned"),
             ([Type::I32], [Type::I32]).into(),
         ),
         (
-            String::from("trace_place"),
+            String::from("trace_terminal_owner"),
             ([Type::I32, Type::I32], [Type::I32]).into(),
         ),
         (
