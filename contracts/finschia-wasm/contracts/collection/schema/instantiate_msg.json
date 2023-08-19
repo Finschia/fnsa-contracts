@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InstantiateMsg",
+  "type": "object",
+  "required": [
+    "meta",
+    "name",
+    "owner",
+    "uri"
+  ],
+  "properties": {
+    "meta": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "uri": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExecuteMsg",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "unjail"
+      ],
+      "properties": {
+        "unjail": {
+          "type": "object",
+          "required": [
+            "validator_addr"
+          ],
+          "properties": {
+            "validator_addr": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  ]
+}

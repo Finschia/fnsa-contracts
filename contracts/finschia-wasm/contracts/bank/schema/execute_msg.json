@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExecuteMsg",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "send"
+      ],
+      "properties": {
+        "send": {
+          "type": "object",
+          "required": [
+            "amount",
+            "from_address",
+            "to_address"
+          ],
+          "properties": {
+            "amount": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Coin"
+              }
+            },
+            "from_address": {
+              "type": "string"
+            },
+            "to_address": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "multi_send"
+      ],
+      "properties": {
+        "multi_send": {
+          "type": "object",
+          "required": [
+            "inputs",
+            "outputs"
+          ],
+          "properties": {
+            "inputs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Input"
+              }
+            },
+            "outputs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Output"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  ],
+  "definitions": {
+    "Coin": {
+      "description": "Coin defines a token with a denomination and an amount.\n\nNOTE: The amount field is an Int which implements the custom method signatures required by gogoproto.",
+      "type": "object",
+      "required": [
+        "amount",
+        "denom"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string"
+        },
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
+    "Input": {
+      "description": "Input models transaction input.",
+      "type": "object",
+      "required": [
+        "address",
+        "coins"
+      ],
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "coins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Coin"
+          }
+        }
+      }
+    },
+    "Output": {
+      "description": "Output models transaction outputs.",
+      "type": "object",
+      "required": [
+        "address",
+        "coins"
+      ],
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "coins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Coin"
+          }
+        }
+      }
+    }
+  }
+}

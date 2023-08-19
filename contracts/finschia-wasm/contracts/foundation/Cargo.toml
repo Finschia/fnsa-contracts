@@ -1,6 +1,6 @@
 [package]
-name          = "auction"
-description   = "Example auction to use dynamic link"
+name          = "foundation"
+description   = "Example foundation to use finschia-wasm"
 authors       = [
   "dudong2 <leesj9476lsj@gmail.com>",
 ]
@@ -21,13 +21,13 @@ backtraces = ["cosmwasm-std/backtraces"]
 library = []
 
 [dependencies]
-cosmwasm-schema = { workspace = true }
-cosmwasm-std    = { workspace = true }
-cw-storage-plus = { workspace = true }
-cw2             = { workspace = true }
-cw721           = { workspace = true }
-cw721-base      = { workspace = true, features = ["library"] }
-cw-utils        = { workspace = true }
-schemars        = { workspace = true }
-serde           = { workspace = true }
-thiserror       = { workspace = true }
+cosmwasm-schema  = { workspace = true }
+cosmwasm-std     = { workspace = true }
+cosmwasm-storage = { workspace = true }
+cw-storage-plus  = { workspace = true }
+cw2              = { workspace = true }
+finschia-std     = { workspace = true }
+schemars         = { workspace = true }
+serde            = { workspace = true }
+thiserror        = { workspace = true }
+

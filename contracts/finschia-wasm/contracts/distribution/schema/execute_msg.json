@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExecuteMsg",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "fund_community_pool"
+      ],
+      "properties": {
+        "fund_community_pool": {
+          "type": "object",
+          "required": [
+            "amount",
+            "depositor"
+          ],
+          "properties": {
+            "amount": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Coin"
+              }
+            },
+            "depositor": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "set_withdraw_address"
+      ],
+      "properties": {
+        "set_withdraw_address": {
+          "type": "object",
+          "required": [
+            "delegator_address",
+            "withdraw_address"
+          ],
+          "properties": {
+            "delegator_address": {
+              "type": "string"
+            },
+            "withdraw_address": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "withdraw_delegator_reward"
+      ],
+      "properties": {
+        "withdraw_delegator_reward": {
+          "type": "object",
+          "required": [
+            "delegator_address",
+            "validator_address"
+          ],
+          "properties": {
+            "delegator_address": {
+              "type": "string"
+            },
+            "validator_address": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "withdraw_validator_commission"
+      ],
+      "properties": {
+        "withdraw_validator_commission": {
+          "type": "object",
+          "required": [
+            "validator_address"
+          ],
+          "properties": {
+            "validator_address": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "delegate"
+      ],
+      "properties": {
+        "delegate": {
+          "type": "object",
+          "required": [
+            "delegator_address",
+            "validator_address"
+          ],
+          "properties": {
+            "amount": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Coin"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "delegator_address": {
+              "type": "string"
+            },
+            "validator_address": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  ],
+  "definitions": {
+    "Coin": {
+      "description": "Coin defines a token with a denomination and an amount.\n\nNOTE: The amount field is an Int which implements the custom method signatures required by gogoproto.",
+      "type": "object",
+      "required": [
+        "amount",
+        "denom"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string"
+        },
+        "denom": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

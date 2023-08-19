@@ -1,0 +1,301 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExecuteMsg",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "mint"
+      ],
+      "properties": {
+        "mint": {
+          "type": "object",
+          "required": [
+            "amount",
+            "from",
+            "to"
+          ],
+          "properties": {
+            "amount": {
+              "type": "string"
+            },
+            "from": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "burn"
+      ],
+      "properties": {
+        "burn": {
+          "type": "object",
+          "required": [
+            "amount",
+            "from"
+          ],
+          "properties": {
+            "amount": {
+              "type": "string"
+            },
+            "from": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "send"
+      ],
+      "properties": {
+        "send": {
+          "type": "object",
+          "required": [
+            "amount",
+            "from",
+            "to"
+          ],
+          "properties": {
+            "amount": {
+              "type": "string"
+            },
+            "from": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "operator_burn"
+      ],
+      "properties": {
+        "operator_burn": {
+          "type": "object",
+          "required": [
+            "amount",
+            "from",
+            "operator"
+          ],
+          "properties": {
+            "amount": {
+              "type": "string"
+            },
+            "from": {
+              "type": "string"
+            },
+            "operator": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "operator_send"
+      ],
+      "properties": {
+        "operator_send": {
+          "type": "object",
+          "required": [
+            "amount",
+            "from",
+            "operator",
+            "to"
+          ],
+          "properties": {
+            "amount": {
+              "type": "string"
+            },
+            "from": {
+              "type": "string"
+            },
+            "operator": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "authorize_operator"
+      ],
+      "properties": {
+        "authorize_operator": {
+          "type": "object",
+          "required": [
+            "holder",
+            "operator"
+          ],
+          "properties": {
+            "holder": {
+              "type": "string"
+            },
+            "operator": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "revoke_operator"
+      ],
+      "properties": {
+        "revoke_operator": {
+          "type": "object",
+          "required": [
+            "holder",
+            "operator"
+          ],
+          "properties": {
+            "holder": {
+              "type": "string"
+            },
+            "operator": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "grant_permission"
+      ],
+      "properties": {
+        "grant_permission": {
+          "type": "object",
+          "required": [
+            "from",
+            "permission",
+            "to"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "permission": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "revoke_permission"
+      ],
+      "properties": {
+        "revoke_permission": {
+          "type": "object",
+          "required": [
+            "from",
+            "permission"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "permission": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "modify"
+      ],
+      "properties": {
+        "modify": {
+          "type": "object",
+          "required": [
+            "changes",
+            "owner"
+          ],
+          "properties": {
+            "changes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Attribute"
+              }
+            },
+            "owner": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  ],
+  "definitions": {
+    "Attribute": {
+      "description": "Attribute defines a key and value of the attribute.",
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -2,7 +2,7 @@
 name          = "cw721-base-dynamiclink"
 description   = "Example extending CW721 NFT to use dynamic link"
 authors       = [
-  "dydong2 <leesj9476lsj@gmail.com>",
+  "dudong2 <leesj9476lsj@gmail.com>",
 ]
 version       = { workspace = true }
 edition       = { workspace = true }

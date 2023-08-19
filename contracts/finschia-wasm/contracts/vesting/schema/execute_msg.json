@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExecuteMsg",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "create_vesting_account"
+      ],
+      "properties": {
+        "create_vesting_account": {
+          "type": "object",
+          "required": [
+            "amount",
+            "delayed",
+            "end_time",
+            "from_address",
+            "to_address"
+          ],
+          "properties": {
+            "amount": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Coin"
+              }
+            },
+            "delayed": {
+              "type": "boolean"
+            },
+            "end_time": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "from_address": {
+              "type": "string"
+            },
+            "to_address": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  ],
+  "definitions": {
+    "Coin": {
+      "description": "Coin defines a token with a denomination and an amount.\n\nNOTE: The amount field is an Int which implements the custom method signatures required by gogoproto.",
+      "type": "object",
+      "required": [
+        "amount",
+        "denom"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string"
+        },
+        "denom": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

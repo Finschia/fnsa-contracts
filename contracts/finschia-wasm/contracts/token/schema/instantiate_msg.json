@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InstantiateMsg",
+  "type": "object",
+  "required": [
+    "amount",
+    "decimals",
+    "meta",
+    "mintable",
+    "name",
+    "owner",
+    "symbol",
+    "to",
+    "uri"
+  ],
+  "properties": {
+    "amount": {
+      "type": "string"
+    },
+    "decimals": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "meta": {
+      "type": "string"
+    },
+    "mintable": {
+      "type": "boolean"
+    },
+    "name": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "symbol": {
+      "type": "string"
+    },
+    "to": {
+      "type": "string"
+    },
+    "uri": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

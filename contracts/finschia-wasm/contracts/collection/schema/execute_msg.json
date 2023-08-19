@@ -1,0 +1,716 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExecuteMsg",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "issue_nft"
+      ],
+      "properties": {
+        "issue_nft": {
+          "type": "object",
+          "required": [
+            "meta",
+            "name",
+            "owner"
+          ],
+          "properties": {
+            "meta": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "mint_nft"
+      ],
+      "properties": {
+        "mint_nft": {
+          "type": "object",
+          "required": [
+            "from",
+            "params",
+            "to"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "params": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/MintNftParam"
+              }
+            },
+            "to": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "send_nft"
+      ],
+      "properties": {
+        "send_nft": {
+          "type": "object",
+          "required": [
+            "from",
+            "to",
+            "token_ids"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            },
+            "token_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "burn_nft"
+      ],
+      "properties": {
+        "burn_nft": {
+          "type": "object",
+          "required": [
+            "from",
+            "token_ids"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "token_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "operator_send_nft"
+      ],
+      "properties": {
+        "operator_send_nft": {
+          "type": "object",
+          "required": [
+            "from",
+            "operator",
+            "to",
+            "token_ids"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "operator": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            },
+            "token_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "operator_burn_nft"
+      ],
+      "properties": {
+        "operator_burn_nft": {
+          "type": "object",
+          "required": [
+            "from",
+            "operator",
+            "token_ids"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "operator": {
+              "type": "string"
+            },
+            "token_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "issue_ft"
+      ],
+      "properties": {
+        "issue_ft": {
+          "type": "object",
+          "required": [
+            "amount",
+            "decimals",
+            "meta",
+            "mintable",
+            "name",
+            "owner",
+            "to"
+          ],
+          "properties": {
+            "amount": {
+              "type": "string"
+            },
+            "decimals": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "meta": {
+              "type": "string"
+            },
+            "mintable": {
+              "type": "boolean"
+            },
+            "name": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "mint_ft"
+      ],
+      "properties": {
+        "mint_ft": {
+          "type": "object",
+          "required": [
+            "amount",
+            "from",
+            "to"
+          ],
+          "properties": {
+            "amount": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Coin"
+              }
+            },
+            "from": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "send_ft"
+      ],
+      "properties": {
+        "send_ft": {
+          "type": "object",
+          "required": [
+            "amount",
+            "from",
+            "to"
+          ],
+          "properties": {
+            "amount": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Coin"
+              }
+            },
+            "from": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "burn_ft"
+      ],
+      "properties": {
+        "burn_ft": {
+          "type": "object",
+          "required": [
+            "amount",
+            "from"
+          ],
+          "properties": {
+            "amount": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Coin"
+              }
+            },
+            "from": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "operator_send_ft"
+      ],
+      "properties": {
+        "operator_send_ft": {
+          "type": "object",
+          "required": [
+            "amount",
+            "from",
+            "operator",
+            "to"
+          ],
+          "properties": {
+            "amount": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Coin"
+              }
+            },
+            "from": {
+              "type": "string"
+            },
+            "operator": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "operator_burn_ft"
+      ],
+      "properties": {
+        "operator_burn_ft": {
+          "type": "object",
+          "required": [
+            "amount",
+            "from",
+            "operator"
+          ],
+          "properties": {
+            "amount": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Coin"
+              }
+            },
+            "from": {
+              "type": "string"
+            },
+            "operator": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "attach"
+      ],
+      "properties": {
+        "attach": {
+          "type": "object",
+          "required": [
+            "from",
+            "to_token_id",
+            "token_id"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "to_token_id": {
+              "type": "string"
+            },
+            "token_id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "detach"
+      ],
+      "properties": {
+        "detach": {
+          "type": "object",
+          "required": [
+            "from",
+            "token_id"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "token_id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "operator_attach"
+      ],
+      "properties": {
+        "operator_attach": {
+          "type": "object",
+          "required": [
+            "from",
+            "operator",
+            "to_token_id",
+            "token_id"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "operator": {
+              "type": "string"
+            },
+            "to_token_id": {
+              "type": "string"
+            },
+            "token_id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "operator_detach"
+      ],
+      "properties": {
+        "operator_detach": {
+          "type": "object",
+          "required": [
+            "from",
+            "operator",
+            "token_id"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "operator": {
+              "type": "string"
+            },
+            "token_id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "authorize_operator"
+      ],
+      "properties": {
+        "authorize_operator": {
+          "type": "object",
+          "required": [
+            "holder",
+            "operator"
+          ],
+          "properties": {
+            "holder": {
+              "type": "string"
+            },
+            "operator": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "revoke_operator"
+      ],
+      "properties": {
+        "revoke_operator": {
+          "type": "object",
+          "required": [
+            "holder",
+            "operator"
+          ],
+          "properties": {
+            "holder": {
+              "type": "string"
+            },
+            "operator": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "grant_permission"
+      ],
+      "properties": {
+        "grant_permission": {
+          "type": "object",
+          "required": [
+            "from",
+            "permission",
+            "to"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "permission": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "revoke_permission"
+      ],
+      "properties": {
+        "revoke_permission": {
+          "type": "object",
+          "required": [
+            "from",
+            "permission"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "permission": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "modify"
+      ],
+      "properties": {
+        "modify": {
+          "type": "object",
+          "required": [
+            "changes",
+            "owner",
+            "token_index",
+            "token_type"
+          ],
+          "properties": {
+            "changes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Attribute"
+              }
+            },
+            "owner": {
+              "type": "string"
+            },
+            "token_index": {
+              "type": "string"
+            },
+            "token_type": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  ],
+  "definitions": {
+    "Attribute": {
+      "description": "Attribute defines a key and value of the attribute.\n\nSince: 0.46.0 (finschia)",
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "Coin": {
+      "description": "Coin defines a token with a token id and an amount.",
+      "type": "object",
+      "required": [
+        "amount",
+        "token_id"
+      ],
+      "properties": {
+        "amount": {
+          "description": "amount of the token.",
+          "type": "string"
+        },
+        "token_id": {
+          "description": "token id associated with the token.",
+          "type": "string"
+        }
+      }
+    },
+    "MintNftParam": {
+      "description": "MintNFTParam defines a parameter for minting nft.",
+      "type": "object",
+      "required": [
+        "meta",
+        "name",
+        "token_type"
+      ],
+      "properties": {
+        "meta": {
+          "description": "meta is a brief description of the nft. Note: it has an app-specific limit in length.",
+          "type": "string"
+        },
+        "name": {
+          "description": "name defines the human-readable name of the nft (mandatory). Note: it has an app-specific limit in length.",
+          "type": "string"
+        },
+        "token_type": {
+          "description": "token type or class id of the nft. Note: it cannot start with zero. refer to TokenType for the definition.",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

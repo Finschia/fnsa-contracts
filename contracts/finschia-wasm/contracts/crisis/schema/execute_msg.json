@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExecuteMsg",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "verify_invariant"
+      ],
+      "properties": {
+        "verify_invariant": {
+          "type": "object",
+          "required": [
+            "invariant_module_name",
+            "invariant_route",
+            "sender"
+          ],
+          "properties": {
+            "invariant_module_name": {
+              "type": "string"
+            },
+            "invariant_route": {
+              "type": "string"
+            },
+            "sender": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  ]
+}
